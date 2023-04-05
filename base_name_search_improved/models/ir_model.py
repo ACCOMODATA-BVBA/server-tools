@@ -8,6 +8,7 @@ from lxml import etree
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import ValidationError
+from odoo.osv import query
 
 _logger = logging.getLogger(__name__)
 # Extended name search is only used on some operators
@@ -56,6 +57,8 @@ def _get_name_search_domain(self):
 
 
 def _extend_name_results(self, domain, results, limit, name_get_uid):
+    if isinstance(results, query.Query):
+        results = results._result
     result_count = len(results)
     if result_count < limit:
         domain += [("id", "not in", results)]
